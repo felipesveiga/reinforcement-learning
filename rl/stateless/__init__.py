@@ -2,12 +2,16 @@
 # Classe método Greedy (com opção para rodarmos o Optimistic Initial Value)
 # Classe Epsilon Greedy
 
+from tqdm import tqdm
 from typing import (
                     Callable, 
                     List,
+                    Dict,
                     Any,
                     )
-from rl.stateless.optimizers import Optimizer
+from rl.stateless.optimizers.base import Optimizer
+from rl.stateless.utils import validate_checkpoints_config, checkpoint_policy
+from rl.stateless.types import CheckpointConfigAlias 
 
 class StatelessAgent:
     '''
@@ -17,12 +21,18 @@ class StatelessAgent:
         probabilistic distributions will only change based on its past decisions and not on the situation
         it is.
     '''
-    def __init__(self, routes:List[Callable[[Any], float]], optimizer:Optimizer):
+    def __init__(self, routes:List[Callable[[Any], int]], optimizer:Optimizer):
         self.routes = routes
         self.optimizer = Optimizer
-        self.routes_probs_ = {route:0 for route in routes}
+        self.route_stats_ = {route:{'n':0, 'successes':0} for route in routes}
 
-    def simulate(self, max_iter:int, iter_checkpoints:int|None):
-        self.routes_probs_  = self.optimizer.warmup(self)
-        for i in range(max_iter):
-            ...
+    def _evaluate(self, checkpoint_config:CheckpointConfigAlias, i:int):
+        self.routes_stats_ =  self.optimizer.execute(self.routes_stats_) 
+        checkpoint_policy(checkpoint_config, self.route_stats_, i)
+
+    def simulate(self, max_iter:int, checkpoint_config:CheckpointConfigAlias):
+        validate_checkpoints_config(checkpoint_config)
+        self.routes_stats_ = self.optimizer.warmup(self.route_stats_)
+        for i in tqdm(range(max_iter), desc='Simulation in Progress'):
+            self._evaluate(checkpoint_config, i)
+        return self
