@@ -11,7 +11,7 @@ from typing import (
                     )
 from rl.stateless.optimizers.base import Optimizer
 from rl.stateless.utils import validate_checkpoints_config, checkpoint_policy
-from rl.stateless.types import CheckpointConfigAlias 
+from rl.stateless.types import RouteAlias, CheckpointConfigAlias
 
 class StatelessAgent:
     '''
@@ -21,7 +21,7 @@ class StatelessAgent:
         probabilistic distributions will only change based on its past decisions and not on the situation
         it is.
     '''
-    def __init__(self, routes:List[Callable[[Any], int]], optimizer:Optimizer):
+    def __init__(self, routes:List[RouteAlias], optimizer:Optimizer):
         self.routes = routes
         self.optimizer = Optimizer
         self.route_stats_ = {route:{'n':0, 'successes':0} for route in routes}

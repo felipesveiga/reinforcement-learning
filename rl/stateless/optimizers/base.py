@@ -2,7 +2,7 @@ from typing import (
         Callable,
         Any,
 )
-from rl.stateless.types import RouteStatsAlias, RoutesStatsAlias
+from rl.stateless.types import RouteAlias, RouteStatsAlias, RoutesStatsAlias
 
 class Optimizer:
     def __init__(self, no_warmup:bool):
