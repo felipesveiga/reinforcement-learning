@@ -14,7 +14,7 @@ checkpoints_schema = {
 }
 
 def validate_checkpoints_config(checkpoint_config:CheckpointConfigAlias):
-    if checkpoints:
+    if checkpoint_config:
         try:
             validate(instance=checkpoint_config, schema=checkpoints_schema)
             return True

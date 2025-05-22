@@ -23,16 +23,17 @@ class StatelessAgent:
     '''
     def __init__(self, routes:List[RouteAlias], optimizer:Optimizer):
         self.routes = routes
-        self.optimizer = Optimizer
-        self.route_stats_ = {route:{'n':0, 'successes':0} for route in routes}
+        self.optimizer = optimizer
+        self.n_ = 0
+        self.routes_stats_ = {route:{'n':0, 'successes':0} for route in routes}
 
-    def _evaluate(self, checkpoint_config:CheckpointConfigAlias, i:int):
+    def _evaluate(self, checkpoint_config:CheckpointConfigAlias):
+        self.n_ += 1
         self.routes_stats_ =  self.optimizer.execute(self.routes_stats_) 
-        checkpoint_policy(checkpoint_config, self.route_stats_, i)
+        checkpoint_policy(checkpoint_config, self.route_stats_, self.n_)
 
-    def simulate(self, max_iter:int, checkpoint_config:CheckpointConfigAlias):
+    def evaluate(self, checkpoint_config:CheckpointConfigAlias=None):
         validate_checkpoints_config(checkpoint_config)
-        self.routes_stats_ = self.optimizer.warmup(self.route_stats_)
-        for i in tqdm(range(max_iter), desc='Simulation in Progress'):
-            self._evaluate(checkpoint_config, i)
+        self.routes_stats_ = self.optimizer.warmup(self.routes_stats_)
+        self._evaluate(checkpoint_config)
         return self
