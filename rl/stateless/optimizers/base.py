@@ -6,9 +6,9 @@ from rl.stateless.types import RouteAlias, RouteStatsAlias, RoutesStatsAlias
 
 class Optimizer:
     def __init__(self, no_warmup:bool):
-        self.no_warmup = None
+        self.no_warmup = no_warmup
     
-    def _choose_route(self, routes_stats:RoutesStatsAlias, n:int)->Callable:
+    def _choose_route(self, routes_stats:RoutesStatsAlias, **kwargs)->Callable:
         ...
 
     def _update_stats(self, route:RouteAlias, route_stats:RouteStatsAlias)->RouteStatsAlias:
@@ -25,7 +25,7 @@ class Optimizer:
                     routes_stats[route] = self._update_stats(route, routes_stats[route])
         return routes_stats
             
-    def execute(self, routes_stats:RoutesStatsAlias)->RoutesStatsAlias:
-        route = self._choose_route()
+    def execute(self, routes_stats:RoutesStatsAlias, **kwargs)->RoutesStatsAlias:
+        route = self._choose_route(routes_stats, **kwargs)
         routes_stats[route] = self._update_stats(route, routes_stats[route])
         return routes_stats

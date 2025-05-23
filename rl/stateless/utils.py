@@ -23,17 +23,18 @@ def validate_checkpoints_config(checkpoint_config:CheckpointConfigAlias):
     else:
         return True
 
-def post_checkpoint(routes_stats:RoutesStatsAlias, i:int, output_dir:str)->None:
+def post_checkpoint(routes_stats:RoutesStatsAlias, n:int, output_dir:str)->None:
     data = {
-        'n_checkpoint':i,
+        'n_checkpoint':n,
         'stats':{
             str(route):routes_stats[route] for route in routes_stats
         }
     }
     makedirs(output_dir, exist_ok=True)
-    dump(data, join(output_dir, f'data_iteration_{i}.json'), ensure_ascii=False)
+    with open(join(output_dir, f'data_iteration_{n}.json'), 'w') as file:
+        dump(data, file, ensure_ascii=False)
 
-def checkpoint_policy(checkpoint_config:CheckpointConfigAlias, routes_stats:RoutesStatsAlias, i:int)->None:
+def checkpoint_policy(checkpoint_config:CheckpointConfigAlias, routes_stats:RoutesStatsAlias, n:int)->None:
     if checkpoint_config:
-        if i % checkpoint_config['n'] == 0:
-            post_checkpoint(routes_stats, i, checkpoint_config['output_path'])
+        if n % checkpoint_config['n'] == 0:
+            post_checkpoint(routes_stats, n, checkpoint_config['output_path'])
