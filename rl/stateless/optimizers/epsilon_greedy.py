@@ -5,15 +5,42 @@ from typing import List
 
 E = 10e-8
 
-def _choose_suboptimal(routes:List[RouteAlias], probs:List[float], arg_max:int):
+def _choose_suboptimal(routes:List[RouteAlias], probs:List[float], arg_max:int)->RouteAlias:
+    f'''
+        Chooses the route when we are in an iteration in which the optimal one 
+        is disregarded.
+
+        Parameters
+        ----------
+        `routes`: List[{RouteAlias}]
+            A list with all the possible alternatives the agent can take.
+        `props`: List[float]
+            A list with all the success rates for the routes.
+        `arg_max`: int
+            The index of the optimal route.
+    
+       Returns
+       -------
+       The chosen function route. 
+    '''
     suboptimal_routes = [routes[i] for i in range(len(routes)) if i != arg_max]
     suboptimal_probs = [probs[i]+E for i in range(len(probs)) if i != arg_max]
     return np.random.choice(suboptimal_routes, p=np.array(suboptimal_probs)/sum(suboptimal_probs))
 
 class EpsilonGreedy(Optimizer):
+    '''
+        Epsilon-Greedy optimizer.
+
+        Parameters
+        ---------
+        `eps`: float
+            The probability of choosing a suboptimal route.
+    '''
     def __init__(self, eps:float):
+        if eps<=0 or eps>=1:
+            raise ValueError('Invalid `eps` value. It must be in the range ]0,1[') 
         self.eps = eps
-        super().__init__(no_warmup=False)
+        super().__init__(warmup=True)
     
     def _choose_route(self, routes_stats:RoutesStatsAlias)->RouteAlias:
         routes = list(routes_stats.keys())

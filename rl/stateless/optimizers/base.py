@@ -5,8 +5,17 @@ from typing import (
 from rl.stateless.types import RouteAlias, RouteStatsAlias, RoutesStatsAlias
 
 class Optimizer:
-    def __init__(self, no_warmup:bool):
-        self.no_warmup = no_warmup
+    '''
+        Base class for any `rl.stateless` optimizer.
+        
+        Parameter
+        ---------
+        `warmup`: bool
+            A boolean indicating if a warm-up round is necessary.
+            Use it in case the algorithm you run crashes when it executes a route for the first time.
+    '''
+    def __init__(self, warmup:bool):
+        self.warmup = warmup
     
     def _choose_route(self, routes_stats:RoutesStatsAlias, **kwargs)->Callable:
         ...
@@ -16,8 +25,8 @@ class Optimizer:
        route_stats['successes'] += route()  
        return route_stats
 
-    def warmup(self, routes_stats:RoutesStatsAlias)->RoutesStatsAlias:
-        if self.no_warmup:
+    def _warmup(self, routes_stats:RoutesStatsAlias)->RoutesStatsAlias:
+        if self.warmup:
             pass
         else:
             for route in routes_stats:
