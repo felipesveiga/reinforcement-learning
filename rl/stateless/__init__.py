@@ -1,5 +1,5 @@
 from typing import List
-from rl.stateless.optimizers.base import Optimizer
+from rl.stateless.optimizers.base import StatelessOptimizer
 from rl.stateless.utils import validate_checkpoints_config, checkpoint_policy
 from rl.stateless.types import RouteAlias, CheckpointConfigAlias
 
@@ -15,7 +15,7 @@ class StatelessAgent:
         ----------
         `routes`: List[{RouteAlias}]
             A list with all the possible alternatives the agent can take.
-        `optimizer`: `Optimizer`
+        `optimizer`: `StatelessOptimizer`
             The optimizer algorithm used in the route selection.
         `checkpoint_config`: {CheckpointConfigAlias}
             A dictionary with the configurations for checkpoint saving. It must provide the 
@@ -29,7 +29,7 @@ class StatelessAgent:
         -------
         `evaluate`: Performs an evaluation.
     '''
-    def __init__(self, routes:List[RouteAlias], optimizer:Optimizer, checkpoint_config:CheckpointConfigAlias=None):
+    def __init__(self, routes:List[RouteAlias], optimizer:StatelessOptimizer, checkpoint_config:CheckpointConfigAlias=None):
         validate_checkpoints_config(checkpoint_config)
         self.routes = routes
         self.optimizer = optimizer

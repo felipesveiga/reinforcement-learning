@@ -43,6 +43,18 @@ class EpsilonGreedy(Optimizer):
         super().__init__(warmup=True)
     
     def _choose_route(self, routes_stats:RoutesStatsAlias)->RouteAlias:
+        f'''
+            Chooses the route to be taken in a given iteration based on the Epsilon-Greedy algorithm. 
+
+            Parameters
+            ----------
+            `routes_stats`: {RoutesStatsAlias}
+                A dictionary with all the execution data from the routes.
+
+            Returns
+            -------
+            The chosen route to be taken.
+        '''
         routes = list(routes_stats.keys())
         probs = [routes_stats[route]['successes']/routes_stats[route]['n'] for route in routes]
         arg_max = np.argmax(probs)
