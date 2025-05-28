@@ -1,5 +1,5 @@
 import numpy as np
-from rl.stateless.optimizers.base import Optimizer
+from rl.stateless.optimizers.base import StatelessOptimizer 
 from rl.stateless.types import RouteAlias, RoutesStatsAlias
 from typing import List
 
@@ -27,7 +27,7 @@ def _choose_suboptimal(routes:List[RouteAlias], probs:List[float], arg_max:int)-
     suboptimal_probs = [probs[i]+E for i in range(len(probs)) if i != arg_max]
     return np.random.choice(suboptimal_routes, p=np.array(suboptimal_probs)/sum(suboptimal_probs))
 
-class EpsilonGreedy(Optimizer):
+class EpsilonGreedy(StatelessOptimizer):
     '''
         Epsilon-Greedy optimizer.
 

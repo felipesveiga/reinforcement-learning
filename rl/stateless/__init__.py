@@ -1,7 +1,11 @@
 from typing import List
 from rl.stateless.optimizers.base import StatelessOptimizer
 from rl.stateless.utils import validate_checkpoints_config, checkpoint_policy
-from rl.stateless.types import RouteAlias, CheckpointConfigAlias
+from rl.stateless.types import (
+    RouteAlias, 
+    CheckpointConfigAlias, 
+    RoutesStatsAlias
+)
 
 class StatelessAgent:
     f'''
@@ -25,11 +29,23 @@ class StatelessAgent:
                 "output_path":"The target directory"
             }}
 
+        Attributes
+        ----------
+        `n_`: int
+            The amount of executions done so far.
+        `routes_stats_`: {RoutesStatsAlias}
+            The dictionary pointing the routes methods to their respective usage stats.
+
         Methods
         -------
         `evaluate`: Performs an evaluation.
     '''
-    def __init__(self, routes:List[RouteAlias], optimizer:StatelessOptimizer, checkpoint_config:CheckpointConfigAlias=None):
+    def __init__(
+                 self, 
+                 routes:List[RouteAlias], 
+                 optimizer:StatelessOptimizer, 
+                 checkpoint_config:CheckpointConfigAlias=None
+                 )->None:
         validate_checkpoints_config(checkpoint_config)
         self.routes = routes
         self.optimizer = optimizer
