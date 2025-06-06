@@ -58,7 +58,7 @@ class StatelessAgent:
             Performs the evaluation, verifying whether checkpointing is necessary.
         '''
         self.n_ += 1
-        self.routes_stats_ =  self.optimizer.execute(self.routes_stats_) 
+        self.routes_stats_ =  self.optimizer.execute(self.routes_stats_, n=self.n_) 
         checkpoint_policy(self.checkpoint_config, self.routes_stats_, self.n_)
 
     def evaluate(self):

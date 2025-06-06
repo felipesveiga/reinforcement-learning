@@ -42,7 +42,7 @@ class EpsilonGreedy(StatelessOptimizer):
         self.eps = eps
         super().__init__(warmup=True)
     
-    def _choose_route(self, routes_stats:RoutesStatsAlias)->RouteAlias:
+    def _choose_route(self, routes_stats:RoutesStatsAlias, **kwargs)->RouteAlias:
         f'''
             Chooses the route to be taken in a given iteration based on the Epsilon-Greedy algorithm. 
 
@@ -50,7 +50,8 @@ class EpsilonGreedy(StatelessOptimizer):
             ----------
             `routes_stats`: {RoutesStatsAlias}
                 A dictionary with all the execution data from the routes.
-
+            `**kwargs`: 
+                Additional arguments to be informed depending on the optimizer.
             Returns
             -------
             The chosen route to be taken.

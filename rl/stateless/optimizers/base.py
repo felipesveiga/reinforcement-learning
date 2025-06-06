@@ -81,6 +81,8 @@ class StatelessOptimizer:
             ---------
             `routes_stats`: {RoutesStatsAlias} 
                 The dictionary that points routes to their respective stats.
+            `**kwargs`: 
+                Additional arguments to be informed depending on the optimizer.
 
             Returns
             -------
