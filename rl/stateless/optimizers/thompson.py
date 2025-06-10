@@ -6,12 +6,9 @@ from rl.stateless.types import (
     RouteAlias, 
     RoutesStatsAlias,
     RouteStatsAlias,
-    BetaParametersAlias
 )
 
 class Thompson(StatelessOptimizer):
-    def __init_betas(self, routes_stats:RoutesStatsAlias):
-        self.betas_parameters_ = {route:{'a':1,'b':1} for route in routes_stats}
 
     def __init__(self):
         super().__init__(warmup=True)
@@ -61,4 +58,4 @@ class Thompson(StatelessOptimizer):
     def _choose_route(self, routes_stats:RoutesStatsAlias,**kwargs):
         routes = [route for route in routes_stats]
         means = [beta.mean(routes_stats[route]['a'], routes_stats[route]['b']) for route in routes]
-        return argmax(means)
+        return routes[argmax(means)]
