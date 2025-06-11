@@ -9,7 +9,10 @@ from rl.stateless.types import (
 )
 
 class Thompson(StatelessOptimizer):
-
+    '''
+        Implementation of the Thompson Sampling/Bayesian Bandits optimizer for
+        Multi-Armed Bandits like cases.
+    '''
     def __init__(self):
         super().__init__(warmup=True)
 
@@ -56,6 +59,19 @@ class Thompson(StatelessOptimizer):
        return route_stats
 
     def _choose_route(self, routes_stats:RoutesStatsAlias,**kwargs):
+        f'''
+            Chooses the current iteration's route based on the Thompson Sampling 
+            algorithm.
+            
+           Parameter
+           ---------
+            `route_stats`: {RouteStatsAlias}
+                The dictionary with the route's stats.
+       
+            Returns
+            -------
+            The route to be executed.
+        '''
         routes = [route for route in routes_stats]
         means = [beta.mean(routes_stats[route]['a'], routes_stats[route]['b']) for route in routes]
         return routes[argmax(means)]
