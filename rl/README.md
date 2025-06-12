@@ -11,6 +11,17 @@ You need to initialize it with an optimizer from the `stateless.optimizers` subm
 * UCB1
 * Thompson Sampling / Bayesian Bandits
 
+### Checkpointing
+The user is able to save the routes' stats for every $n$ iterations. To do so, they must pass a dictionary as the value for the `StatelessAgent`'s `checkpoint_config` argument.
+
+```json
+ # `checkpoint_config` schema.
+ {
+    "n":"The number of rounds to await the next register of stats",
+    "output_path":"The directory in which the checkpoints are stored"
+ }
+```
+
 Here is a sample code for guidance:
 
 ```python
@@ -19,17 +30,25 @@ from rl.stateless import StatelessAgent
 from rl.stateless.optimizers import Thompson
 
 def best():
+    '''
+        The most favorable route. 
+    '''
     if np.random.random()<.9:
         return 1
     return 0
 
 def worst():
+    '''
+        The least favorable route.
+    '''
     if np.random.random()<.35:
         return 1
     return 0
 
+# Instantiating our agent.
 agent = StatelessAgent(routes=[best, worst], optimizer=Thompson(), checkpoint_config={'n':10, 'output_path':'data/'})
 
+# Simulating the decision-making process for 1000 rounds.
 for _ in range(1000):
     agent.evaluate()
 ```
