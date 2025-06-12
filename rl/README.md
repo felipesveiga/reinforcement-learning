@@ -12,10 +12,9 @@ You need to initialize it with an optimizer from the `stateless.optimizers` subm
 * Thompson Sampling / Bayesian Bandits
 
 ### Checkpointing
-The user is able to save the routes' stats for every $n$ iterations. To do so, they must pass a dictionary as the value for the `StatelessAgent`'s `checkpoint_config` argument.
+The user is able to save the routes' stats for every $n$ iterations. To do so, they must pass a dictionary as the value for the `StatelessAgent`'s `checkpoint_config` argument with the following schema.
 
 ```json
- # `checkpoint_config` schema.
  {
     "n":"The number of rounds to await the next register of stats",
     "output_path":"The directory in which the checkpoints are stored"
